@@ -1,0 +1,21 @@
+{
+    "name": "tab registration poc",
+    "description": "tabcorp registration poc",
+    "require": {
+         "vlucas/phpdotenv": "^3.6.0",
+         "auth0/auth0-PHP": "dev-master",
+         "google/recaptcha": "^1.2"
+    },
+    "repositories": [
+        {
+            "type": "git",
+            "url": "https://github.com/abbaspour/auth0-PHP.git"
+        }
+    ],
+    "authors": [
+        {
+            "name": "Amin Abbaspour",
+            "email": "amin@auth0.com"
+        }
+    ]
+}

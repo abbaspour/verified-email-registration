@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration</title>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"
+            integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+            crossorigin="anonymous"></script>
+    <script src="env.js"></script>
+    <script src="https://www.google.com/recaptcha/api.js?render=6LfcVNwUAAAAAC3_KBKCG66eMqkFrUJLHG8j80sx"></script>
+</head>
+<body>
+    <h1>Welcome to Registration PoC</h1>
+    <label for="email">Email:</label>
+
+    <form id="registration_form" method="post" action="/start.php">
+        <input type="email" id="email" name="email"><br><br>
+        <input type="submit" value="Register">
+    </form>
+
+    <script>
+        $('#registration_form').submit(function(event) {
+            event.preventDefault();
+            let email = $('#email').val();
+
+            grecaptcha.ready(function() {
+                grecaptcha.execute(RECAPTCHA_SITE_KEY, {action: 'register_email'}).then(function(token) {
+                    $('#registration_form').prepend('<input type="hidden" name="token" value="' + token + '">');
+                    $('#registration_form').prepend('<input type="hidden" name="action" value="register_email">');
+                    $('#registration_form').unbind('submit').submit();
+                });
+            });
+        });
+    </script>
+</body>
+</html>

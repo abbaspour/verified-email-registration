@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration - Callback</title>
+    <script src="env.js"></script>
+    <script src="http://cdn.auth0.com/js/auth0/9.12.2/auth0.min.js"></script>
+</head>
+<body>
+<h1>Few more questions</h1>
+
+<label for="given_name">Given name:</label>
+<input type="text" id="given_name" name="given_name"><br><br>
+<label for="family_name">Family name:</label>
+<input type="text" id="family_name" name="family_name"><br><br>
+<label for="password">Password:</label>
+<input type="password" id="password" name="password"><br><br>
+
+<input type="submit" value="Create Account" onclick="submit()">
+
+<script>
+    const auth0js = new auth0.WebAuth({
+        domain: AUTH0_DOMAIN,
+        clientID: AUTH0_CLIENT_ID,
+        redirectUri: SUCCESS_REDIRECT_URI,
+        responseType: 'id_token'
+    });
+
+    // TODO: add state & nonce check if want to enforce same browser
+    let access_token = getAccessToken();
+
+    auth0js.client.userInfo(access_token, function(err, user) {
+        if(err) {
+            console.log('invalid access token');
+            window.location.href = '/error.html?msg=' + err;
+        }
+    });
+
+    function create_user(access_token, given_name, family_name, password) {
+        let url = '/create-user.php';
+
+        let data = {
+            access_token: access_token,
+            given_name: given_name,
+            family_name: family_name,
+            password: password
+        };
+
+        const params = {
+            headers: {'content-type': 'application/json'},
+            method: 'POST',
+            body: JSON.stringify(data)
+        };
+
+        fetch(url, params)
+            .then(data => data.json())
+            .then(value => {
+                auth0js.login(
+                    {
+                        'email' : value.email,
+                        'password' : password,
+                        'realm' : value.connection,
+                    },
+                    err => {
+                        window.location.href = '/error.html?msg=' + err;
+                    }
+                );
+            })
+            .catch(err => console.log('error in create-user call: ' + err));
+    }
+
+    function submit() {
+        let given_name = document.getElementById('given_name').value;
+        let family_name = document.getElementById('family_name').value;
+        let password = document.getElementById('password').value;
+        create_user(access_token, given_name, family_name, password);
+    }
+
+    function getParameterByName(name) {
+        var match = RegExp('[#&]' + name + '=([^&]*)').exec(window.location.hash);
+        return match && decodeURIComponent(match[1].replace(/\+/g, ' '));
+    }
+
+    function getAccessToken() {
+        return getParameterByName('access_token');
+    }
+
+</script>
+</body>
+</html>
+
+
+
