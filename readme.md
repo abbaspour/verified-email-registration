@@ -36,7 +36,7 @@ Benefits of the following solution:
 5. Add Passwordless Email to App 
 ![App Passwordless Connection](img/app-conn-2.png)
 6. Add Management API with following scopes to your clients:
-    `users:create`, `users:delete`
+    `users:create`, `users:delete`, `users:read`
 ![App M2M Scopes](img/app-m2m-scopes.png)
 7. (Optional) [register](https://www.google.com/recaptcha/admin/create) a Google reCAPTCHA v3 account
 ![Captcha Register](img/captcha-register.png)
