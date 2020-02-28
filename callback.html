@@ -20,6 +20,10 @@
 <input type="submit" value="Create Account" onclick="submit()">
 
 <script>
+    let error = getParameterByName('error');
+    if(error) {
+        window.location.href = '/error.html?msg=' + error;
+    }
     const auth0js = new auth0.WebAuth({
         domain: AUTH0_DOMAIN,
         clientID: AUTH0_CLIENT_ID,

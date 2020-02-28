@@ -1,10 +1,10 @@
 <?php
 $data = json_decode(file_get_contents('php://input'), true);
 
-$given_name = $data["given_name"];
-$family_name = $data["family_name"];
-$password = $data["password"];
-$access_token = $data["access_token"];
+$given_name = htmlspecialchars($data["given_name"]);
+$family_name = htmlspecialchars($data["family_name"]);
+$password = htmlspecialchars($data["password"]);
+$access_token = htmlspecialchars($data["access_token"]);
 
 if(! (isset($given_name) && isset($family_name) && isset($password) && isset($access_token))) {
     die('missing input');
