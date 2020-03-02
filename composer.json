@@ -1,6 +1,6 @@
 {
-    "name": "tab registration poc",
-    "description": "tabcorp registration poc",
+    "name": "registration poc",
+    "description": "registration poc",
     "require": {
          "vlucas/phpdotenv": "^3.6.0",
          "auth0/auth0-PHP": "dev-master",

@@ -4,11 +4,32 @@ $data = json_decode(file_get_contents('php://input'), true);
 $given_name = htmlspecialchars($data["given_name"]);
 $family_name = htmlspecialchars($data["family_name"]);
 $password = htmlspecialchars($data["password"]);
-$access_token = htmlspecialchars($data["access_token"]);
 
-if(! (isset($given_name) && isset($family_name) && isset($password) && isset($access_token))) {
+if(! (isset($given_name) && isset($family_name) && isset($password))) {
     die('missing input');
 }
+
+function getBearerToken() {
+    $headers = null;
+    if (isset($_SERVER['Authorization'])) {
+        $headers = trim($_SERVER["Authorization"]);
+    } else if (isset($_SERVER['HTTP_AUTHORIZATION'])) {
+        $headers = trim($_SERVER["HTTP_AUTHORIZATION"]);
+    } else {
+        return null;
+    }
+
+    if (!empty($headers)) {
+        if (preg_match('/Bearer\s(\S+)/', $headers, $matches)) {
+            return $matches[1];
+        }
+    }
+    return null;
+}
+
+$access_token = getBearerToken();
+if(! isset($access_token) )
+    die('missing input');
 
 header('Content-Type: application/json');
 

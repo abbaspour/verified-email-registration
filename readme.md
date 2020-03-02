@@ -18,7 +18,7 @@ Benefits of the following solution:
 5. If state/nonce check relaxed, solution works cross browser (T&C applied)
 6. MAU is low (only 1 additional Passwordless user for initial registration)
 7. Invisible CAPTCHA protected 
-8. Higher rate limit for /passwordless/start (Auth0-FF TBA)    
+8. Higher rate limit for `/passwordless/start`    
 9. Works for both SPA and RWA companion apps              
 
 ### Sequence Diagram

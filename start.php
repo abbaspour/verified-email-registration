@@ -9,10 +9,11 @@ if(! (isset($_POST["email"]) && isset($_POST["token"])))
 
 $email = $_POST["email"];
 $gRecaptchaResponse = htmlspecialchars($_POST["token"]);
+$source_ip = $_SERVER['REMOTE_ADDR'];
 
 $recaptcha = new \ReCaptcha\ReCaptcha(getenv('RECAPTCHA_SECRET'));
 $resp = $recaptcha->setExpectedHostname(getenv('RECAPTCHA_SITE_NAME'))
-                  ->verify($gRecaptchaResponse, $_SERVER['REMOTE_ADDR']);
+                  ->verify($gRecaptchaResponse, $source_ip);
 
 if (! $resp->isSuccess()) {
     $errors = $resp->getErrorCodes();
@@ -56,6 +57,7 @@ $search_params = array(
     'fields' => ['user_id', 'email']
 );
 
+// todo: switch to /api/v2/user-by-email
 try {
     $search_result = $mgmt_api->users()->getAll($search_params);
 } catch (Exception $e) {
@@ -74,15 +76,13 @@ $state_value = $state_handler->issue(Auth0::TRANSIENT_STATE_KEY);
 
 $authParams = array(
     'redirect_uri' => getenv('AUTH0_CALLBACK_URL'),
-    'response_type' => 'token',
+    'response_type' => 'code',
+    'response_mode' => 'form_post',
     'scope' => 'openid email',
-    //'state' => $state_value
+    'state' => $state_value
 );
 
-
-
-// TODO: check no matching user
-$auth0_api->email_passwordless_start($email, 'link', $authParams);
+$auth0_api->email_passwordless_start($email, 'link', $authParams, $source_ip);
 
 echo "Thank you. Please check your mailbox.<br/>";
 echo '<a href="/">Try again</a>';

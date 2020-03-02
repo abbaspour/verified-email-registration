@@ -1,0 +1,42 @@
+title Registration - OTP Email Verified
+
+participant User as u
+participant Registration\n(Companion App) as reg
+participant Auth0 as a0
+participant DB as db
+
+u -> +reg: click "register"
+reg --> -u: registration form
+
+u -> +reg: submit /start.php {email}
+reg -> a0: user search {email}
+reg -> db: validate no duplicate { email }
+reg -> a0: /passwordless/start { client_id=regapp, client_secret, send=link, email, state=sss }
+reg -> reg: save cookie {state=sss}
+reg --> -u: Please check your mailbox
+
+u -> +a0: click email login link /passwordless/verify_redirect?...
+a0 --> -u: redirect to /authorize { client_id=regapp, response_type=token, scope=email, state=sss }
+
+u --> +reg: /callback.html#access_token=xxx&state=sss
+reg -> reg: verify access_token & state
+reg -> a0: GET /userinfo
+reg -> u: Please provide name, password, etc
+u --> reg: XHR /create-user.php { email, name, password, etc }
+
+reg -> +a0: POST /api/v2/user { name, email, connection=DB, email_verified=true }
+a0 -> +db: create.js
+db --> -a0: user_id
+a0 --> -reg: user_id
+
+reg -> a0: DELETE /api/v2/user/${passwordless_user_id}
+
+reg -> reg: store state in cookie
+#reg -> u: 302 /welcome Page
+u -> +a0: AUTO POST /co/authenticate {username, password, state}
+a0 -> +db: verify credentials
+db --> -a0: OK
+a0 --> u: login_ticket
+u -> a0: /authorzie { login_ticket, redirect_uri=app.compnay.co }
+
+a0 -> u: Registration Successful
