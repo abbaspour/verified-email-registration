@@ -2,7 +2,7 @@
 declare(strict_types = 1);
 
 if(isset($_POST["error"])) {
-    header('Location: /error.html?msg=login');
+    header('Location: error.html?msg=login');
     exit;
 }
 
@@ -20,8 +20,8 @@ use \Auth0\SDK\API\Authentication;
 $auth0_api = new Authentication(
     getenv('AUTH0_DOMAIN'),
     getenv('AUTH0_CLIENT_ID'),
-    getenv('AUTH0_CLIENT_SECRET'), null, null,
-    $guzzleOptions = ['proxy' => 'http://localhost:8888', 'verify' => false]
+    getenv('AUTH0_CLIENT_SECRET'), null, null
+    //$guzzleOptions = ['proxy' => 'http://localhost:8888', 'verify' => false]
 );
 
 try {
@@ -43,7 +43,7 @@ if(!isset($access_token))
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registration - Callback</title>
-    <script src="http://cdn.auth0.com/js/auth0/9.12.2/auth0.min.js"></script>
+    <script src="https://cdn.auth0.com/js/auth0/9.12.2/auth0.min.js"></script>
 </head>
 <body>
 <h1>Few more questions</h1>
@@ -57,7 +57,7 @@ if(!isset($access_token))
 
 <input type="submit" value="Create Account" onclick="submit()">
 
-<br/><a href="/">Start again</a>;
+<br/><a href="index.html">Start again</a>
 
 <script>
     const auth0js = new auth0.WebAuth({
@@ -68,7 +68,7 @@ if(!isset($access_token))
     });
 
     function create_user(access_token, given_name, family_name, password) {
-        let url = '/create-user.php';
+        let url = 'create-user.php';
 
         let data = {
             given_name: given_name,
@@ -88,14 +88,13 @@ if(!isset($access_token))
         fetch(url, params)
             .then(data => data.json())
             .then(value => {
-                auth0js.login(
-                    {
+                auth0js.login({
                         'email' : value.email,
                         'password' : password,
                         'realm' : value.connection,
                     },
                     err => {
-                        window.location.href = '/error.html?msg=' + err;
+                        window.location.href = 'error.html?msg=' + err.error;
                     }
                 );
             })

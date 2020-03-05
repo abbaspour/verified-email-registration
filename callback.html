@@ -19,12 +19,12 @@
 
 <input type="submit" value="Create Account" onclick="submit()">
 
-<br/><a href="/">Start again</a>;
+<br/><a href="index.html">Start again</a>;
 
 <script>
     let error = getParameterByName('error');
     if(error) {
-        window.location.href = '/error.html?msg=' + error;
+        window.location.href = 'error.html?msg=' + error;
     }
     const auth0js = new auth0.WebAuth({
         domain: AUTH0_DOMAIN,
@@ -39,12 +39,12 @@
     auth0js.client.userInfo(access_token, function(err, user) {
         if(err) {
             console.log('invalid access token');
-            window.location.href = '/error.html?msg=' + err;
+            window.location.href = 'error.html?msg=' + err;
         }
     });
 
     function create_user(access_token, given_name, family_name, password) {
-        let url = '/create-user.php';
+        let url = 'create-user.php';
 
         let data = {
             given_name: given_name,
@@ -71,7 +71,7 @@
                         'realm' : value.connection,
                     },
                     err => {
-                        window.location.href = '/error.html?msg=' + err;
+                        window.location.href = 'error.html?msg=' + err;
                     }
                 );
             })

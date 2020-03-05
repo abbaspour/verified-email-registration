@@ -17,7 +17,7 @@ $resp = $recaptcha->setExpectedHostname(getenv('RECAPTCHA_SITE_NAME'))
 
 if (! $resp->isSuccess()) {
     $errors = $resp->getErrorCodes();
-    header('Location: /error.html?msg=captch-failed');
+    header('Location: error.html?msg=captch-failed');
     exit;
 }
 
@@ -65,7 +65,7 @@ try {
 }
 
 if(!empty($search_result)) {
-    header('Location: /error.html?msg=email-taken');
+    header('Location: error.html?msg=email-taken');
     exit;
 }
 
@@ -85,5 +85,5 @@ $authParams = array(
 $auth0_api->email_passwordless_start($email, 'link', $authParams, $source_ip);
 
 echo "Thank you. Please check your mailbox.<br/>";
-echo '<a href="/">Try again</a>';
+echo '<a href="index.html">Try again</a>';
 

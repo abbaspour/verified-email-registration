@@ -4,7 +4,9 @@
     "require": {
          "vlucas/phpdotenv": "^3.6.0",
          "auth0/auth0-PHP": "dev-master",
-         "google/recaptcha": "^1.2"
+         "google/recaptcha": "^1.2",
+         "ext-apache": "*",
+         "ext-json": "*"
     },
     "repositories": [
         {

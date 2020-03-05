@@ -14,7 +14,7 @@
     <h1>Welcome to Registration PoC</h1>
     <label for="email">Email:</label>
 
-    <form id="registration_form" method="post" action="/start.php">
+    <form id="registration_form" method="post" action="start.php">
         <input type="email" id="email" name="email"><br><br>
         <input type="submit" value="Register">
     </form>
@@ -26,9 +26,10 @@
 
             grecaptcha.ready(function() {
                 grecaptcha.execute(RECAPTCHA_SITE_KEY, {action: 'register_email'}).then(function(token) {
-                    $('#registration_form').prepend('<input type="hidden" name="token" value="' + token + '">');
-                    $('#registration_form').prepend('<input type="hidden" name="action" value="register_email">');
-                    $('#registration_form').unbind('submit').submit();
+                    let registration_form = $('#registration_form');
+                    registration_form.prepend('<input type="hidden" name="token" value="' + token + '">');
+                    registration_form.prepend('<input type="hidden" name="action" value="register_email">');
+                    registration_form.unbind('submit').submit();
                 });
             });
         });
