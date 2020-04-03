@@ -35,6 +35,9 @@ $access_token = $result["access_token"];
 if(!isset($access_token))
     die('error in exchange');
 
+setcookie('otp_access_token', $access_token,
+    [ 'expires' => time()+3600, 'path' => '/', 'secure' => false, 'httpOnly' => true, 'samesite' => 'Strict']);
+
 ?>
 
 <!DOCTYPE html>
@@ -67,7 +70,7 @@ if(!isset($access_token))
         responseType: 'id_token'
     });
 
-    function create_user(access_token, given_name, family_name, password) {
+    function create_user(given_name, family_name, password) {
         let url = 'create-user.php';
 
         let data = {
@@ -79,7 +82,6 @@ if(!isset($access_token))
         const params = {
             headers: {
                 'content-type': 'application/json',
-                'Authorization': 'Bearer ' + access_token
             },
             method: 'POST',
             body: JSON.stringify(data)
@@ -105,7 +107,7 @@ if(!isset($access_token))
         let given_name = document.getElementById('given_name').value;
         let family_name = document.getElementById('family_name').value;
         let password = document.getElementById('password').value;
-        create_user("<?= $access_token ?>", given_name, family_name, password);
+        create_user(given_name, family_name, password);
     }
 
 </script>

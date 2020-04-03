@@ -39,7 +39,7 @@ function getBearerToken() {
     return null;
 }
 
-$access_token = getBearerToken();
+$access_token = htmlspecialchars($_COOKIE["otp_access_token"]);
 if(! isset($access_token) )
     die('missing input');
 
